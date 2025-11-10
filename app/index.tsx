@@ -1,11 +1,104 @@
-import { Text, View } from "react-native";
+import { images, offers } from "@/constants";
+import cn from "clsx";
+import { Fragment } from "react";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-2xl font-bold text-blue-500">
-        Welcome to Nativewind with Expo!
-      </Text>
-    </View>
+    <SafeAreaView className="flex-1 bg-white">
+      <FlatList
+        data={offers}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item, index }) => {
+          const isEven = index % 2 === 0;
+          return (
+            <View>
+              <Pressable
+                className={cn(
+                  "offer-card",
+                  isEven ? "flex-row-reverse" : "flex-row",
+                  index === 0 && "h-56"
+                )}
+                style={{ backgroundColor: item.color }}
+                android_ripple={{ color: "#fffff22" }}
+              >
+                {({ pressed }) => (
+                  <Fragment>
+                    <View
+                      className={cn(
+                        "h-full w-1/2",
+                        index === 0 && "w-2/3 absolute right-0"
+                      )}
+                    >
+                      <Image
+                        source={item.image}
+                        className="size-full"
+                        resizeMode="contain"
+                      />
+                    </View>
+                    <View
+                      className={cn(
+                        "offer-card__info",
+                        isEven ? "pl-10" : "pr-10",
+                        index === 0 && "justify-between py-8"
+                      )}
+                    >
+                      <Text
+                        className={cn(
+                          "h1-bold text-white leading-tight",
+                          index === 0 && "max-w-40"
+                        )}
+                      >
+                        {item.title}
+                      </Text>
+                      {index === 0 ? (
+                        <Text className="h1-bold text-white leading-tight ">
+                          $10.00
+                        </Text>
+                      ) : (
+                        <Image
+                          source={images.arrowRight}
+                          className="size-10"
+                          resizeMode="contain"
+                          tintColor="#ffffff"
+                        />
+                      )}
+                    </View>
+                  </Fragment>
+                )}
+              </Pressable>
+            </View>
+          );
+        }}
+        contentContainerClassName="pb-28 px-5"
+        ListHeaderComponent={() => {
+          return (
+            <View className=" flex-between flex-row w-full my-5">
+              <View className="flex-start">
+                <Text className="small-bold text-primary">DELIVER To</Text>
+                <TouchableOpacity className="flex-center flex-row  gap-x-1 mt-0.5">
+                  <Text className="paragraph-bold text-dark-100">Depalpur</Text>
+                  <Image
+                    source={images.arrowDown}
+                    className="size-3"
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <Text>Cart</Text>
+            </View>
+          );
+        }}
+      />
+    </SafeAreaView>
   );
 }
